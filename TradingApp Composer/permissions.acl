@@ -1,0 +1,66 @@
+
+rule TraderCanReadEverything {
+  description: "Allow all participants read access to all resources"
+  participant(p): "org.loonycorn.trading.Trader"
+  operation: READ
+  resource(r): "org.loonycorn.trading.*"
+  condition: (r.owner.getIdentifier() === p.getIdentifier())
+  action: ALLOW
+}
+
+rule TradersCanTrade {
+  description: "Traders can sell"
+  participant: "org.loonycorn.trading.Trader"
+  operation: CREATE
+  resource: "org.hyperledger.composer.system.HistorianRecord"
+  action: ALLOW
+}
+
+rule TraderSells {
+  description: "Trader can create a batch"
+  participant: "org.loonycorn.trading.Trader"
+  operation: ALL
+  resource: "org.loonycorn.trading.Sell"
+  action: ALLOW
+}
+
+rule TraderRemovesTheirCommodities {
+  description: "Trader can create a batch"
+  participant: "org.loonycorn.trading.Trader"
+  operation: ALL
+  resource: "org.loonycorn.trading.RemoveCommoditiesByOwner"
+  action: ALLOW
+}
+
+rule TraderHasFullAccessToTheirAssets {
+  description: "Allow all participants full access to their assets"
+  participant(p): "org.loonycorn.trading.Trader"
+  operation: ALL
+  resource(r): "org.loonycorn.trading.Commodity"
+  condition: (r.owner.getIdentifier() === p.getIdentifier())
+  action: ALLOW
+}
+
+rule SystemACL {
+  description:  "System ACL to permit all access"
+  participant: "org.hyperledger.composer.system.Participant"
+  operation: ALL
+  resource: "org.hyperledger.composer.system.**"
+  action: ALLOW
+}
+
+rule NetworkAdminUser {
+  description: "Grant business network administrators full access to user resources"
+  participant: "org.hyperledger.composer.system.NetworkAdmin"
+  operation: ALL
+  resource: "**"
+  action: ALLOW
+}
+
+rule NetworkAdminSystem {
+  description: "Grant business network administrators full access to system resources"
+  participant: "org.hyperledger.composer.system.NetworkAdmin"
+  operation: ALL
+  resource: "org.hyperledger.composer.system.**"
+  action: ALLOW
+}

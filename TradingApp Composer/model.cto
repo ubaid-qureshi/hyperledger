@@ -1,0 +1,36 @@
+
+namespace org.loonycorn.trading
+
+asset Commodity identified by commodityId {
+  o String commodityId
+  o String description
+  o Double quantity
+  --> Trader owner
+}
+
+participant Trader identified by traderId {
+  o String traderId
+  o String name
+}
+
+transaction Sell {
+  --> Commodity commodity
+  --> Trader newOwner
+}
+
+event SaleNotification {
+  --> Commodity commodity
+}
+
+transaction RemoveCommodities {
+  o Double quantity
+}
+
+transaction RemoveCommoditiesByOwner {
+  o String ownerId
+}
+
+event RemoveNotification {
+  --> Commodity commodity
+}
+
